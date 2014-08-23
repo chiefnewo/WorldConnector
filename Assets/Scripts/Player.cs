@@ -12,10 +12,12 @@ public class Player : MonoBehaviour {
 	public float borderSpeedPenalty = .1f;
 
 	private bool exploded = false;
+	protected Animator animator;
 
 	// Use this for initialization
 	void Start () {
-	
+		animator = GetComponent<Animator>();
+
 	}
 	
 	void FixedUpdate () {
@@ -23,8 +25,13 @@ public class Player : MonoBehaviour {
 
 		if (!exploded){
 			currentVelocity += Input.GetAxisRaw("Vertical") * acceleration * Time.fixedDeltaTime;
+			if (Input.GetAxisRaw("Vertical") > 0)
+				animator.SetBool("Boosting", true);
+			else
+				animator.SetBool("Boosting", false);
 			rotation = Input.GetAxisRaw("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
-		}
+		} else
+			currentVelocity *= 0.001f;
 
 		if (currentVelocity > maxVelocity)
 			currentVelocity = maxVelocity;
@@ -64,10 +71,13 @@ public class Player : MonoBehaviour {
 	void Explode(){
 		// play explosion
 		exploded = true;
+		animator.SetBool("Boosting", false);
+		animator.SetTrigger("Explode");
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {
 		Debug.Log("here!");
-		Explode();
+		if (col.transform.tag == "Deadly")
+			Explode();
 	}
 }
