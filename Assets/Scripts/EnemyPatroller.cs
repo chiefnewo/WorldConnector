@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class EnemyPatroller : MonoBehaviour {
 
-	public float enemySpeed = 0.001f;
+	public float enemySpeed = 0.00001f;
 	public float chooseDistance = .1f; // how close to waypoint before choosing next one
 
 	private List<Vector2> waypoints = new List<Vector2>();
@@ -26,7 +26,7 @@ public class EnemyPatroller : MonoBehaviour {
 		if (Vector2.Distance(curPos, waypoints[targetWaypoint]) <= chooseDistance)
 			NextWaypoint();
 
-		Vector2 trans = Vector2.MoveTowards(curPos, waypoints[targetWaypoint], enemySpeed * Time.deltaTime);
+		Vector2 trans = Vector2.MoveTowards(curPos, waypoints[targetWaypoint], Time.deltaTime);
 		transform.position = trans;
 	}
 
