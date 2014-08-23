@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 	public GameConstants gameConstants;
 
 	public float rotationSpeed = 180f;
-	public float maxVelocity = 2.0f;
+	public float maxVelocity = .1f;
 	private float currentVelocity = 0.0f;
 	public float acceleration = .1f;
 	public float borderSpeedPenalty = 50f;
@@ -98,6 +98,11 @@ public class Player : MonoBehaviour {
 			GameController.Instance.ReachedGoal();
 			exploded = true;
 			slowDown = goalSlowdown;
+		}
+
+		if (col.transform.tag == "Wormhole"){
+			transform.position = col.transform.GetComponent<WormholeSpin>().exit.position;
+			transform.rotation = col.transform.GetComponent<WormholeSpin>().exit.rotation;
 		}
 	}
 
