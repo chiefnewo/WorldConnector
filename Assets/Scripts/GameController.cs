@@ -53,6 +53,11 @@ public class GameController : MonoBehaviour {
 	public void ReachedGoal(){
 		PersistentValues.score += 100 + bonus;
 		CancelInvoke("UpdateBonus");
+		Invoke("LoadNextScene", 2);
+		audio.Play();
+	}
+
+	private void LoadNextScene(){
 		int nextScene = Application.loadedLevel + 1;
 		if (nextScene >= Application.levelCount)
 			nextScene = 0;

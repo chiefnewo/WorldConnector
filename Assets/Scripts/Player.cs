@@ -21,7 +21,6 @@ public class Player : MonoBehaviour {
 
 	// sounds
 	public AudioClip explosion;
-	public AudioClip levelComplete;
 	public AudioClip levelStart;
 
 	// Use this for initialization
@@ -94,7 +93,6 @@ public class Player : MonoBehaviour {
 			Explode();
 
 		if (col.transform.tag == "Goal"){
-			AudioSource.PlayClipAtPoint(levelComplete, Vector2.zero);
 			GameController.Instance.ReachedGoal();
 			exploded = true;
 			slowDown = goalSlowdown;
