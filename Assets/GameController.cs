@@ -10,10 +10,10 @@ public class GameController : MonoBehaviour {
 	public GUIText livesTxt;
 	public GUIText gameOverTxt;
 	public GUIText restartTxt;
-	public int lives = 3;
-	private int score = 0;
+	public GUIText highTxt;
 	private int bonus = 0;
 	private Transform playerRef = null;
+	public string nextScene = "Scene1";
 
 
 	// Use this for initialization
@@ -29,38 +29,44 @@ public class GameController : MonoBehaviour {
 		PlayerStart();
 		bonus = 100;
 		bonusTxt.text = bonus.ToString();
-		score = 0;
-		lives = 3;
-		scoreTxt.text = score.ToString();
+		scoreTxt.text = PersistentValues.score.ToString();
 		InvokeRepeating("UpdateBonus", 1, 1);
 	}
 
 	// Update is called once per frame
 	void Update () {
-		scoreTxt.text = score.ToString();
+		scoreTxt.text = PersistentValues.score.ToString();
+		highTxt.text = PersistentValues.highScore.ToString();
 		bonusTxt.text = bonus.ToString();
-		livesTxt.text = lives.ToString();
+		livesTxt.text = PersistentValues.lives.ToString();
 
 		if (Input.GetButtonDown("Reset")) {
-			if (lives > 0)
+			if (PersistentValues.lives > 0)
 				NextLife();
-			else
-				StartGame();
+			else {
+
+				PersistentValues.score = 0;
+				PersistentValues.lives = 3;
+				Application.LoadLevel("Scene1"); // restart game
+			}
 		}
 	}
 
 	public void ReachedGoal(){
-		score += 100 + bonus;
+		PersistentValues.score += 100 + bonus;
 		CancelInvoke("UpdateBonus");
+		Application.LoadLevel(nextScene);
 	}
 
 	public void NextLife(){
-		if (lives > 1){
-			lives--;
+		if (PersistentValues.lives > 1){
+			PersistentValues.lives--;
 			PlayerStart();
 		} else {
 			bonus = 0;
-			lives = 0;
+			if (PersistentValues.score > PersistentValues.highScore)
+				PersistentValues.highScore = PersistentValues.score;
+			PersistentValues.lives = 0;
 			gameOverTxt.guiText.enabled = true;
 			restartTxt.guiText.enabled = true;
 			gameOverTxt.GetComponent<Animator>().SetBool("GameOver", true);
