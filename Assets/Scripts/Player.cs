@@ -11,13 +11,20 @@ public class Player : MonoBehaviour {
 	public float acceleration = .1f;
 	public float borderSpeedPenalty = .1f;
 
+	public float explosionSlowdown = 48f;
+	public float goalSlowdown = 40f;
+	private float slowDown = 1f;
+
 	private bool exploded = false;
 	protected Animator animator;
+
+	// sounds
+	public AudioClip explosion;
 
 	// Use this for initialization
 	void Start () {
 		animator = GetComponent<Animator>();
-
+		gameConstants = (GameConstants)GameObject.Find("GameConstants").GetComponent("GameConstants");
 	}
 	
 	void FixedUpdate () {
@@ -31,7 +38,7 @@ public class Player : MonoBehaviour {
 				animator.SetBool("Boosting", false);
 			rotation = Input.GetAxisRaw("Horizontal") * rotationSpeed * Time.fixedDeltaTime;
 		} else
-			currentVelocity *= 0.001f;
+			currentVelocity *= slowDown * Time.fixedDeltaTime;
 
 		if (currentVelocity > maxVelocity)
 			currentVelocity = maxVelocity;
@@ -44,22 +51,22 @@ public class Player : MonoBehaviour {
 
 		if (transform.position.x < gameConstants.gameBoundL){
 			transform.position = new Vector3(gameConstants.gameBoundL, transform.position.y);
-			currentVelocity *= borderSpeedPenalty;
+			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.x > gameConstants.gameBoundR){
 			transform.position = new Vector3(gameConstants.gameBoundR, transform.position.y);
-			currentVelocity *= borderSpeedPenalty;
+			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.y > gameConstants.gameBoundT){
 			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundT);
-			currentVelocity *= borderSpeedPenalty;
+			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.y < gameConstants.gameBoundB){
 			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundB);
-			currentVelocity *= borderSpeedPenalty;
+			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 	}
 
@@ -71,13 +78,25 @@ public class Player : MonoBehaviour {
 	void Explode(){
 		// play explosion
 		exploded = true;
+		slowDown = explosionSlowdown;
 		animator.SetBool("Boosting", false);
 		animator.SetTrigger("Explode");
+		AudioSource.PlayClipAtPoint(explosion, Vector2.zero);
 	}
 
 	void OnTriggerEnter2D(Collider2D col) {
-		Debug.Log("here!");
+		//Debug.Log("here!");
 		if (col.transform.tag == "Deadly")
 			Explode();
+
+		if (col.transform.tag == "Goal"){
+			GameController.Instance.ReachedGoal();
+			exploded = true;
+			slowDown = goalSlowdown;
+		}
+	}
+
+	void NextLife(){
+		GameController.Instance.NextLife();
 	}
 }
