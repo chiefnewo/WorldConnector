@@ -13,7 +13,6 @@ public class GameController : MonoBehaviour {
 	public GUIText highTxt;
 	private int bonus = 0;
 	private Transform playerRef = null;
-	public string nextScene = "Scene1";
 
 
 	// Use this for initialization
@@ -44,10 +43,9 @@ public class GameController : MonoBehaviour {
 			if (PersistentValues.lives > 0)
 				NextLife();
 			else {
-
 				PersistentValues.score = 0;
 				PersistentValues.lives = 3;
-				Application.LoadLevel("Scene1"); // restart game
+				Application.LoadLevel(0); // restart game
 			}
 		}
 	}
@@ -55,6 +53,9 @@ public class GameController : MonoBehaviour {
 	public void ReachedGoal(){
 		PersistentValues.score += 100 + bonus;
 		CancelInvoke("UpdateBonus");
+		int nextScene = Application.loadedLevel + 1;
+		if (nextScene >= Application.levelCount)
+			nextScene = 0;
 		Application.LoadLevel(nextScene);
 	}
 
