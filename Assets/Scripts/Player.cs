@@ -20,11 +20,14 @@ public class Player : MonoBehaviour {
 
 	// sounds
 	public AudioClip explosion;
+	public AudioClip levelComplete;
+	public AudioClip levelStart;
 
 	// Use this for initialization
 	void Start () {
 		animator = GetComponent<Animator>();
 		gameConstants = (GameConstants)GameObject.Find("GameConstants").GetComponent("GameConstants");
+		AudioSource.PlayClipAtPoint(levelStart, Vector2.zero);
 	}
 	
 	void FixedUpdate () {
@@ -90,6 +93,7 @@ public class Player : MonoBehaviour {
 			Explode();
 
 		if (col.transform.tag == "Goal"){
+			AudioSource.PlayClipAtPoint(levelComplete, Vector2.zero);
 			GameController.Instance.ReachedGoal();
 			exploded = true;
 			slowDown = goalSlowdown;
