@@ -9,10 +9,12 @@ public class GameController : MonoBehaviour {
 	public GUIText bonusTxt;
 	public GUIText livesTxt;
 	public GUIText gameOverTxt;
+	public GUIText restartTxt;
 	public int lives = 3;
 	private int score = 0;
 	private int bonus = 0;
 	private Transform playerRef = null;
+
 
 	// Use this for initialization
 	void Start () {
@@ -21,10 +23,14 @@ public class GameController : MonoBehaviour {
 	}
 
 	void StartGame(){
+		gameOverTxt.guiText.enabled = false;
+		restartTxt.guiText.enabled = false;
+		gameOverTxt.GetComponent<Animator>().SetBool("GameOver", false);
 		PlayerStart();
 		bonus = 100;
 		bonusTxt.text = bonus.ToString();
 		score = 0;
+		lives = 3;
 		scoreTxt.text = score.ToString();
 		InvokeRepeating("UpdateBonus", 1, 1);
 	}
@@ -35,8 +41,11 @@ public class GameController : MonoBehaviour {
 		bonusTxt.text = bonus.ToString();
 		livesTxt.text = lives.ToString();
 
-		if (Input.GetButton("Reset")) {
-			NextLife();
+		if (Input.GetButtonDown("Reset")) {
+			if (lives > 0)
+				NextLife();
+			else
+				StartGame();
 		}
 	}
 
@@ -53,7 +62,8 @@ public class GameController : MonoBehaviour {
 			bonus = 0;
 			lives = 0;
 			gameOverTxt.guiText.enabled = true;
-			gameOverTxt.GetComponent<Animator>().SetTrigger("GameOver");
+			restartTxt.guiText.enabled = true;
+			gameOverTxt.GetComponent<Animator>().SetBool("GameOver", true);
 			CancelInvoke("UpdateBonus");
 		}
 	}
