@@ -103,4 +103,14 @@ public class Player : MonoBehaviour {
 	void NextLife(){
 		GameController.Instance.NextLife();
 	}
+
+	void PlayRocketSound(){
+		if (!audio.isPlaying){
+			audio.Play();
+		}
+	}
+
+	void StopRocketSound(){
+		audio.Stop();
+	}
 }
