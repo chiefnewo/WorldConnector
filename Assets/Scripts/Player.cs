@@ -9,7 +9,8 @@ public class Player : MonoBehaviour {
 	public float maxVelocity = 2.0f;
 	private float currentVelocity = 0.0f;
 	public float acceleration = .1f;
-	public float borderSpeedPenalty = .1f;
+	public float borderSpeedPenalty = 50f;
+	public float wallBounce = .1f; // how far off the walls to bounce when you hit them
 
 	public float explosionSlowdown = 48f;
 	public float goalSlowdown = 40f;
@@ -53,22 +54,22 @@ public class Player : MonoBehaviour {
 		transform.Rotate(Vector3.forward, -rotation);
 
 		if (transform.position.x < gameConstants.gameBoundL){
-			transform.position = new Vector3(gameConstants.gameBoundL, transform.position.y);
+			transform.position = new Vector3(gameConstants.gameBoundL + wallBounce, transform.position.y);
 			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.x > gameConstants.gameBoundR){
-			transform.position = new Vector3(gameConstants.gameBoundR, transform.position.y);
+			transform.position = new Vector3(gameConstants.gameBoundR - wallBounce, transform.position.y);
 			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.y > gameConstants.gameBoundT){
-			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundT);
+			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundT - wallBounce);
 			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 
 		if (transform.position.y < gameConstants.gameBoundB){
-			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundB);
+			transform.position = new Vector3(transform.position.x, gameConstants.gameBoundB + wallBounce);
 			currentVelocity *= borderSpeedPenalty * Time.fixedDeltaTime;
 		}
 	}
