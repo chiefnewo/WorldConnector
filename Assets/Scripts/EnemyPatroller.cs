@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class EnemyPatroller : MonoBehaviour {
 
-	public float enemySpeed = 1.0f;
+	public float enemySpeed = 0.001f;
+	public float chooseDistance = .1f; // how close to waypoint before choosing next one
 
 	private List<Vector2> waypoints = new List<Vector2>();
 	private int targetWaypoint = 0;
@@ -21,5 +22,18 @@ public class EnemyPatroller : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// lerp to waypoint
+		Vector2 curPos = transform.position;
+		if (Vector2.Distance(curPos, waypoints[targetWaypoint]) <= chooseDistance)
+			NextWaypoint();
+
+		Vector2 trans = Vector2.MoveTowards(curPos, waypoints[targetWaypoint], enemySpeed * Time.deltaTime);
+		transform.position = trans;
+	}
+
+	void NextWaypoint(){
+		targetWaypoint++;
+
+		if (targetWaypoint >= waypoints.Count)
+			targetWaypoint = 0;
 	}
 }
