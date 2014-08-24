@@ -40,13 +40,13 @@ public class GameController : MonoBehaviour {
 		livesTxt.text = PersistentValues.lives.ToString();
 
 		if (Input.GetButtonDown("Reset")) {
-			if (PersistentValues.lives > 0)
-				NextLife();
-			else {
+			//if (PersistentValues.lives > 0)
+			//	NextLife();
+			//else {
 				PersistentValues.score = 0;
 				PersistentValues.lives = 3;
 				Application.LoadLevel(0); // restart game
-			}
+			//}
 		}
 	}
 
