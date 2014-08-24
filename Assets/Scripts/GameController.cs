@@ -43,10 +43,11 @@ public class GameController : MonoBehaviour {
 			//if (PersistentValues.lives > 0)
 			//	NextLife();
 			//else {
+			if (gameOverTxt.guiText.enabled == true){
 				PersistentValues.score = 0;
 				PersistentValues.lives = 3;
 				Application.LoadLevel(0); // restart game
-			//}
+			}
 		}
 	}
 
